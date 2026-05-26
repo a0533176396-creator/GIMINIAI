@@ -67,8 +67,16 @@ namespace GIMINIAI
                     }
                     if (int.Parse(response.StatusCode.ToString()) == 401)
                     {
-                        return "הגעת למגבלת הקריאות שלך";
-                    }
+
+                    Task<string> getModels = GetAiModels();
+                    return "יש לך שגיאה ב URL,ייתכן אחת מהאפשרויות הבאות: \n"+
+                        "1. המפתח שלך לא תקין או פג תוקף. \n"+
+                        "2. ייתכן שזוהי חסימת אינטרנט (נטפרי, אתרוג, חסימת מוסד הלימודים וכו'). \n" +
+                        "3. מודל לא קיים, להלן רשימת המודלים הקיימים: \n" +
+                        getModels.Result;
+
+
+                   }
                     return "שגיאה";
                 }
             }
@@ -77,7 +85,7 @@ namespace GIMINIAI
                 return "error";
             }
         }
-        private async Task<string> GetAiModels()
+        private static async Task<string> GetAiModels()
         {
             string url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}";
 
